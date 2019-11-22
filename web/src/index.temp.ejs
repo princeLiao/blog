@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="./lib/editor/editormd/editormd.min.css" type = "text/css">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+</head>
+
+<body>
+    <div id="root">
+
+    </div>
+    
+<script  src=<%= htmlWebpackPlugin.options.curEnv=="prod"?"./static/react/react.min.js":"./static/react/react.js" %>></script>
+<script  src=<%= htmlWebpackPlugin.options.curEnv=="prod"?"./static/react/react-dom.min.js":"./static/react/react-dom.js" %>></script>
+<script  src=<%= htmlWebpackPlugin.options.curEnv=="prod"?"./static/react/react-router-dom.min.js":"./static/react/react-router-dom.js" %>></script>
+<script src="./static/jquery.min.js"></script>
+<script  src=<%= htmlWebpackPlugin.options.curEnv=="prod"?"./lib/editor/editormd/editormd.min.js":"./lib/editor/editormd/editormd.js" %>></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,29 @@
+{
+    "compilerOptions": {
+      "outDir": "./dist/",
+      "noImplicitAny": true,
+      "strictNullChecks":true,
+      "noImplicitThis":true,
+      "module": "esNext",
+      "target": "es5",
+      "jsx": "react",
+      "sourceMap":true,
+      "allowJs": true,
+      "experimentalDecorators":true,
+      "moduleResolution":"node",
+      "baseUrl":".",
+      "paths": {
+        "@components/*": ["./src/components/*"],
+        "@container/*": ["./src/container/*"],
+        "@entry/*": ["./src/entry/*"],
+        "@utils/*": ["./src/utils/*"],
+        "@stories/*": ["./src/stories/*"]
+      },
+    },
+    "include": [
+        "src/entry/*",
+        "src/components/*",
+        "src/index.tsx",
+        "src/router.tsx"
+    ],
+}
