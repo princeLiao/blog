@@ -3,7 +3,7 @@ import DocumentTitle from "react-document-title";
 import "./EntryTemp.scss";
 import ajax from '@action/ajax'
 import action from '@action/interface'
-interface props {
+interface IProps {
     [propsName: string]: any
 }
 /**
@@ -11,8 +11,8 @@ interface props {
  * @author durwin
  * @email 792356934@qq.com
  */
-export default class EntryTemp extends React.Component<props, {}>{
-    constructor(props) {
+export default class EntryTemp extends React.Component<IProps, {}>{
+    constructor(props:IProps) {
         super(props);
     }
     render() {

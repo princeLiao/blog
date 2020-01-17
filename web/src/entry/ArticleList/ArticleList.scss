@@ -1,0 +1,22 @@
+.x-ArticleList{
+    padding-top: 60px;
+    .container{
+        width: 980px;
+        margin: 0 auto ;
+        background-color: #fff;
+    }
+    .header{
+        padding: 15px;
+        display: flex;
+        button{
+            margin-right: 10px;
+        }
+    }
+    .ant-input-search{
+        width: 280px;
+        margin-left: auto;
+    } 
+    .article-list{
+        padding: 15px;
+    }  
+}

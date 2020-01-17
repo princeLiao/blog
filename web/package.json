@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js --force ",
+    "start": "node server.js --force  set NODE_ENV=dev",
     "offline": "http-server dist",
     "build": " webpack  --config webpack.prod.js",
     "new": "node util.js newTpl"
@@ -82,6 +82,7 @@
     "antd": "^3.25.1",
     "classnames": "^2.2.6",
     "lodash": "^4.17.11",
+    "prettier": "^1.19.1",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-document-title": "^2.0.3",

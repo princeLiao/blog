@@ -1,10 +1,12 @@
 import * as React from 'react';
 import * as Loadable from 'react-loadable';
-
+import { Spin } from 'antd';
 //通用的过场组件
 const loadingComponent =()=>{
     return (
-        <div>loading</div>
+        <div className="router-loading">
+            <Spin size="large" />
+        </div>
     ) 
 }
 

@@ -1,8 +1,6 @@
-import {  notification } from "antd";
-
-import 
-    action
- from '@action/interface.js';
+import { notification } from 'antd'
+import { createHashHistory } from 'history'; // 如果是hash路由
+// import { createBrowserHistory } from 'history'; // 如果是history路由
 /* 封装ajax函数
  * @param {string}opt.type http连接的方式，包括POST和GET两种方式
  * @param {string}opt.url 发送请求的url
@@ -15,130 +13,136 @@ import
  * @param {function}opt.success ajax发送并接收成功调用的回调函数
  */
 function ajax(opt) {
-    opt = opt || {};
-    opt.method = opt.method.toUpperCase() || 'POST';
-    opt.url = opt.url || '';
-    opt.cookie = opt.cookie;
-    opt.loading=opt.loading||true;
-    opt.async = opt.async === false ? false : true;
-    opt.data = opt.data || null;
-    opt.timeout= opt.timeout||10000;
-    opt.success = opt.success || function () {};
-    opt.code == undefined ? opt.code = 0 : "";
-    opt.r == undefined ? opt.r = 1 : "";
-    opt.returnNull = opt.returnNull || function () {};
-    var xmlHttp = null,timer=null;
-    if (XMLHttpRequest) {
-        xmlHttp = new XMLHttpRequest();
-    } else {
-        xmlHttp = new ActiveXObject('Microsoft.XMLHTTP');
+  opt = opt || {}
+  opt.method = opt.method.toUpperCase() || 'POST'
+  opt.url = opt.url || ''
+  opt.cookie = opt.cookie
+  opt.loading = opt.loading || true
+  opt.async = opt.async === false ? false : true
+  opt.data = opt.data || null
+  opt.timeout = opt.timeout || 10000
+  opt.success = opt.success || function() {}
+  opt.code == undefined ? (opt.code = 0) : ''
+  opt.r == undefined ? (opt.r = 1) : ''
+  opt.returnNull = opt.returnNull || function() {}
+  var xmlHttp = null,
+    timer = null
+  if (XMLHttpRequest) {
+    xmlHttp = new XMLHttpRequest()
+  } else {
+    xmlHttp = new ActiveXObject('Microsoft.XMLHTTP')
+  }
+  var params = [],
+    postData = ''
+  if (opt.formData) {
+    postData = opt.data
+  } else if (opt.appJson && opt.method.toUpperCase() === 'POST') {
+    postData = JSON.stringify(opt.data)
+  } else {
+    for (var key in opt.data) {
+      params.push(key + '=' + encodeURIComponent(opt.data[key]))
+      postData = params.join('&')
     }
-    var params = [],
-        postData = "";
-    if (opt.formData) {
-        postData = opt.data;
-    } else if (opt.appJson && opt.method.toUpperCase() === 'POST') {
-        postData = JSON.stringify(opt.data);
-    } else {
-        for (var key in opt.data) {
-            params.push(key + '=' + encodeURIComponent(opt.data[key]) );
-            postData = params.join('&');
-        }
-    }
-    opt.cookie===false ? xmlHttp.withCredentials = false :xmlHttp.withCredentials = true;
-    xmlHttp.onreadystatechange = function () {
-        if (xmlHttp.readyState == 4) {
-            clearTimeout(timer);
-            if (xmlHttp.status == 200) {
-                let response;
-                if (opt.wmdRule === true) {
-                    opt.success(xmlHttp.responseText);
-                    return false;
-                }
-                if (xmlHttp.responseText) {
-                    try{
-                        response = JSON.parse(xmlHttp.responseText);
-                    }
-                    catch(e){
-                        response=xmlHttp.responseText;
-                    }
-                   
-                } else {
-                    if (typeof opt.returnNull === "function") {
-                        opt.returnNull()
-                    } else {
-                        notification.error({
-                            message:'服务器正忙，请稍后再试'
-                        });
-                    }
-                    return;
-                }
-                typeof opt.always === "function" ? opt.always(response) : "";
-                if ((response.r != undefined && response.r == opt.r) || (response.code != undefined && response.code == opt.code)) {
-                    opt.success(response.data,response);
-                    // 添加第二个参数： 为了配合后端，获取data以外的数据
-                } else {
-                    if(response.code != undefined && response.code == 10010){
-                        //未登录
-                        let path=location.pathname;
-                        if(path.indexOf(".html")>0){
-                            let ii=path.lastIndexOf("/");
-                            path=path.slice(0,ii+1);
-                        }
-                        typeof opt.loginFail === "function" ? opt.loginFail(response) : location.href = action.interface.entryAuth + '&url=' + encodeURIComponent(location.origin + path + '#/login');
-                    }else{
-                        typeof opt.fail === "function" ? opt.fail(response) :     notification.error({
-                            message:response.message || response.msg || "接口请求异常",
-                            duration:3
-                        });
-                    }
-                  
-                }
-            } else {
-                typeof opt.always === "function" ? opt.always() : ""
-                if (typeof opt.error === "function") {
-                    opt.error();
-                } else {
-                    notification.error({
-                        message: "网络异常，请检测网络",
-                        duration:3
-                    });
-                }
+  }
+  opt.cookie === false ? (xmlHttp.withCredentials = false) : (xmlHttp.withCredentials = true)
+  return new Promise((resolve, reject) => {
+    xmlHttp.onreadystatechange = function() {
+      if (xmlHttp.readyState == 4) {
+        clearTimeout(timer)
+        if (xmlHttp.status == 200) {
+          let response
+          if (xmlHttp.responseText) {
+            try {
+              response = JSON.parse(xmlHttp.responseText)
+            } catch (e) {
+              response = xmlHttp.responseText
             }
+          } else {
+            if (typeof opt.returnNull === 'function') {
+              opt.returnNull()
+            } else {
+              notification.error({
+                message: '服务器正忙，请稍后再试'
+              })
+            }
+            reject({
+              type: 'null',
+              message: '服务器正忙，请稍后再试'
+            })
+            return
+          }
+          typeof opt.always === 'function' ? opt.always(response) : ''
+          if ((response.r != undefined && response.r == opt.r) || (response.code != undefined && response.code == opt.code)) {
+            opt.success && opt.success(response.data, response)
+            resolve(response.data)
+          } else {
+            if (response.code == 1001) {
+              const history = createHashHistory()
+              history.replace("/login");
+            } else {
+              typeof opt.fail === 'function'
+                ? opt.fail(response)
+                : notification.error({
+                    message: response.message || response.msg || '接口请求异常',
+                    duration: 3
+                  })
+              reject(response)
+            }
+          }
+        } else {
+          typeof opt.always === 'function' ? opt.always() : ''
+          if (typeof opt.error === 'function') {
+            opt.error()
+          } else {
+            notification.error({
+              message: '网络异常，请检测网络',
+              duration: 3
+            })
+          }
+          reject({
+            type: 'netError',
+            message: '网络异常，请检测网络'
+          })
         }
-    };
+      }
+    }
     if (opt.method.toUpperCase() === 'POST') {
-        xmlHttp.open(opt.method, opt.url + "?t=" + (new Date()).getTime(), opt.async);
-        if (opt.appJson) {
-            xmlHttp.setRequestHeader('Content-type', 'application/json');
-        } else if (!opt.formData) {
-            xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        }
-        xmlHttp.send(postData);
+      xmlHttp.open(opt.method, opt.url + '?t=' + new Date().getTime(), opt.async)
+      if (opt.appJson) {
+        xmlHttp.setRequestHeader('Content-type', 'application/json')
+      } else if (!opt.formData) {
+        xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+      }
+      xmlHttp.send(postData)
     } else if (opt.method.toUpperCase() === 'GET') {
-        xmlHttp.open(opt.method, opt.url + '?' + postData+(postData?'&':'')+'t='+(new Date()).getTime(), opt.async);
-        if (opt.appJson) {
-            xmlHttp.setRequestHeader('Content-type', 'application/json');
-        }
-        else if (!opt.formData) {
-            xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        }
-        xmlHttp.send(null);
+      xmlHttp.open(opt.method, opt.url + '?' + postData + (postData ? '&' : '') + 't=' + new Date().getTime(), opt.async)
+      if (opt.appJson) {
+        xmlHttp.setRequestHeader('Content-type', 'application/json')
+      } else if (!opt.formData) {
+        xmlHttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+      }
+      xmlHttp.send(null)
     }
     /**
      * 超时处理
-     * @param async==false 异步请求才有超时
+     * @param async==true 异步请求才有超时
      */
-    if(opt.async===true&&opt.timeout){
-        timer=setTimeout(function(){
-            xmlHttp.abort();
-            typeof opt.timeoutFun==="function"?opt.timeoutFun(): notification.warn({
-                message: "请求超时，请重试",
-                duration:3
-            });
-        },opt.timeout);
+    if (opt.async === true && opt.timeout) {
+      timer = setTimeout(function() {
+        xmlHttp.abort()
+        typeof opt.timeoutFun === 'function'
+          ? opt.timeoutFun()
+          : notification.warn({
+              message: '请求超时，请重试',
+              duration: 3
+            })
+        reject({
+          type: 'timeout',
+          message: '请求超时，请重试'
+        })
+      }, opt.timeout)
     }
-  
+  })
 }
 
-export default ajax;
+export default ajax

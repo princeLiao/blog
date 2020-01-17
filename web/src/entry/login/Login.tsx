@@ -8,7 +8,7 @@ import ajax from '@action/ajax'
 import action from '@action/interface'
 
 interface props {
-    form: any;
+    [propsName: string]: any
 }
 /**
  * 表示一个Login。
@@ -18,16 +18,16 @@ class LoginForm extends React.Component<props, {}>{
     constructor(props:props) {
         super(props);
     }
-    handleSubmit = e => {
-        e.preventDefault();
-        this.props.form.validateFields((err, values) => {
+    handleSubmit = (event:React.FormEvent) => {
+        event.preventDefault();
+        this.props.form.validateFields((err:Error, values:any) => {
             if (!err) {
                 ajax({
                     url: action.login.in,
                     method: 'post',
                     data: values,
                     success: (res) => {
-                        // this.props.history.push("/")
+                        this.props.history.push("/")
                     }
                 })
             }

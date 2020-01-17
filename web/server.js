@@ -1,6 +1,6 @@
 const webpackDevServer = require('webpack-dev-server');
 const webpack = require('webpack');
-const port=process.env.npm_package_port;
+const port = process.env.npm_package_port;
 const config = require('./webpack.dev.js');
 const options = {
   contentBase: './dist',

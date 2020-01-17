@@ -32,7 +32,7 @@ const config = {
             })
         })
     },
-    router: function (sourceDir="./src/entry", desPath="./src/router.tsx", temp="./src/template/router.tsx") {
+    router: function (sourceDir = "./src/entry", desPath = "./src/router.tsx", temp = "./src/template/router.tsx") {
         //遍历文件夹 
         fs.readdir(sourceDir, (err, files) => {
             if (err) {
@@ -43,8 +43,8 @@ const config = {
             // })
             files = files.map(item => {
                 return {
-                    path: item=="Home"?"/":config.wordCase(item, false),
-                    exact:true,
+                    path: item == "Home" ? "/" : config.wordCase(item, false),
+                    exact: true,
                     component: item
                 }
             })
@@ -70,24 +70,24 @@ const config = {
     }
 }
 
-let newDirName,mode;
+let newDirName, mode;
 
-
-if(argv.length<=2){
+console.log(argv)
+if (argv.length <= 2) {
     throw "请输入需要新建模板的名字";
 }
-else if(argv.length==3){
-    newDirName=argv[2];
-    mode="newTpl";
-}else if(argv.length==4){
-    mode=argv[2];
-    newDirName=argv[3];
+else if (argv.length == 3) {
+    newDirName = argv[2];
+    mode = "newTpl";
+} else if (argv.length == 4) {
+    mode = argv[2];
+    newDirName = argv[3];
 }
 else {
-    throw "请输入正确格式: node util.js [newTpl/] [name]" ;
+    throw "请输入正确格式: node util.js [newTpl/] [name]";
 }
 
-config[mode](sourceDir, desPath, newDirName) ;
+config[mode](sourceDir, desPath, newDirName);
 
 
 

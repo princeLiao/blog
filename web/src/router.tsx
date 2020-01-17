@@ -10,11 +10,6 @@ import Loadable from "@utils/Loadable"
 import { ConfigProvider } from 'antd';
 import zhCN from 'antd/es/locale/zh_CN';
 import 'antd/dist/antd.css';
-interface routerItem {
-    path: string;
-    exact: boolean;
-    component: string;
-}
 const AppRouter = () => (
     <ConfigProvider locale={zhCN}>
         <HashRouter  >
@@ -24,7 +19,8 @@ const AppRouter = () => (
                 <Route path="/register" exact={true} component={Loadable(() => import('@entry/Register'))} />
                 <Route path="/about" exact={true} component={Loadable(() => import('@entry/About'))} />
                 <Route path="/addArticle" exact={true} component={Loadable(() => import('@entry/AddArticle'))} />
-                <Route path="/article" exact={true} component={Loadable(() => import('@entry/Article'))} />
+                <Route path="/article/:id" exact={true} component={Loadable(() => import('@entry/Article'))} />
+                <Route path="/articleList" exact={true} component={Loadable(() => import('@entry/ArticleList'))} />
             </Switch>
         </HashRouter>
     </ConfigProvider>

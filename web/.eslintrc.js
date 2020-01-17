@@ -1,3 +1,4 @@
+const dev = process.env.NODE_ENV === "dev"
 module.exports = {
     "env": {
         "browser": true,
@@ -9,11 +10,11 @@ module.exports = {
         "plugin:react/recommended"
         // "plugin:@typescript-eslint/eslint-recommended",
         // "plugin:@typescript-eslint/recommended"
-      ],
+    ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
         "project": "./tsconfig.json"
-      },
+    },
     "plugins": [
         "react",
         "typescript",
@@ -37,17 +38,17 @@ module.exports = {
         "for-direction": "error",
         "getter-return": "error",
         "no-cond-assign": "error",
-        "no-console":0,
+        "no-console": dev ? 0 : 2,
         "valid-jsdoc": ["error", { "prefer": { "arg": "param", "argument": "param", "class": "constructor", "return": "returns", "virtual": "abstract" } }],
-        // "quotes": [
-        //     "error",
-        //     "single"
-        // ],
+        "quotes": [
+            "error",
+            "single"
+        ],
         "semi": [
             "warn",
-            "always"
+            "none"
         ],
-        "react/no-deprecated":1,
-        "no-unused-vars":1
+        "react/no-deprecated": 1,
+        "no-unused-vars": 1
     }
 };

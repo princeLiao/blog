@@ -44,7 +44,7 @@ module.exports = (devMode) => {
                             loader: "awesome-typescript-loader",
                             options: {
                                 // disable type checker - we will use it in fork plugin
-                                transpileOnly: true
+                                transpileOnly: devMode
                             }
                         }
                     ],
